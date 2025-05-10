@@ -9,53 +9,50 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Checkerboard background for the canvas */
         #spinnerCanvas {
             background-image:
                 linear-gradient(45deg, #ccc 25%, transparent 25%),
                 linear-gradient(-45deg, #ccc 25%, transparent 25%),
                 linear-gradient(45deg, transparent 75%, #ccc 75%),
                 linear-gradient(-45deg, transparent 75%, #ccc 75%);
-            background-size: 20px 20px; /* Size of the squares */
+            background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
             width: 100%;
             height: 100%;
-            max-width: 600px; /* Max display width on page */
-            max-height: 600px; /* Max display height on page */
-            object-fit: contain; /* Scale canvas down if needed, preserving aspect ratio */
+            max-width: 600px; 
+            max-height: 600px; 
+            object-fit: contain; 
         }
         .canvas-wrapper {
-            width: 600px; /* Fixed display size for the canvas container */
+            width: 600px; 
             height: 600px;
-            border: 1px solid #e2e8f0; /* Tailwind gray-200 */
-            overflow: hidden; /* Hide parts of the 1600x1600 canvas if it's larger than wrapper */
-            margin: auto; /* Center the wrapper */
+            border: 1px solid #e2e8f0; 
+            overflow: hidden; 
+            margin: auto; 
         }
         .controls-container {
             max-width: 600px;
-            margin: auto; /* Center the controls */
+            margin: auto; 
         }
-        /* Custom styles for file input */
         input[type="file"]::file-selector-button {
-            background-color: #3b82f6; /* Tailwind blue-500 */
+            background-color: #3b82f6;
             color: white;
             border: none;
             padding: 0.5rem 1rem;
-            border-radius: 0.375rem; /* rounded-md */
+            border-radius: 0.375rem;
             cursor: pointer;
             transition: background-color 0.2s;
         }
         input[type="file"]::file-selector-button:hover {
-            background-color: #2563eb; /* Tailwind blue-600 */
+            background-color: #2563eb;
         }
-        /* Style for disabled button */
         button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
         .loader {
-            border: 5px solid #f3f3f3; /* Light grey */
-            border-top: 5px solid #3b82f6; /* Blue */
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3b82f6;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -74,7 +71,7 @@
     <div class="container mx-auto max-w-5xl">
         <header class="mb-8 text-center">
             <h1 class="text-4xl font-bold text-slate-700">Image Spinner & WebP Exporter</h1>
-            <p class="text-slate-500 mt-2">Upload a transparent PNG/GIF, adjust settings, and prepare for WebP export.</p>
+            <p class="text-slate-500 mt-2">Upload an image, adjust settings for preview and export, then prepare for WebP.</p>
         </header>
 
         <div class="flex flex-col lg:flex-row gap-8">
@@ -89,42 +86,41 @@
             <div class="lg:w-1/3 bg-white p-6 rounded-lg shadow-lg controls-container">
                 <div class="space-y-5">
                     <div>
-                        <label for="imageUpload" class="block text-sm font-medium text-slate-700 mb-1">Upload Image (PNG/GIF)</label>
-                        <input type="file" id="imageUpload" accept="image/png, image/gif" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-slate-300 rounded-md cursor-pointer">
+                        <label for="imageUpload" class="block text-sm font-medium text-slate-700 mb-1">Upload Image (PNG, GIF, WebP, JPG)</label>
+                        <input type="file" id="imageUpload" accept="image/png, image/gif, image/webp, image/jpeg" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-slate-300 rounded-md cursor-pointer">
                     </div>
-
-                    <div>
-                        <label for="rotationAmount" class="block text-sm font-medium text-slate-700">Rotation Speed (degrees/step)</label>
-                        <input type="number" id="rotationAmount" value="2" min="0" max="359" step="0.1" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
-                        <p class="text-xs text-slate-500 mt-1">Degrees to rotate per animation step (0-359). Affects live preview speed.</p>
-                    </div>
-
-                    <div>
-                        <label for="rotationFrames" class="block text-sm font-medium text-slate-700">Number of Export Frames</label>
-                        <input type="number" id="rotationFrames" value="36" min="1" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
-                         <p class="text-xs text-slate-500 mt-1">Total frames for export. E.g., for 10° steps in export, use 36 frames for a full 360° rotation.</p>
-                    </div>
-                     <div>
-                        <label for="exportRotationStep" class="block text-sm font-medium text-slate-700">Rotation Per Export Frame (degrees)</label>
-                        <input type="number" id="exportRotationStep" value="10" min="1" max="359" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
-                        <p class="text-xs text-slate-500 mt-1">Degrees per frame for the EXPORTED animation (1-359).</p>
-                    </div>
+                    
+                    <hr class="my-4 border-slate-200">
+                    <p class="text-md font-semibold text-slate-700">Animation & Export Settings:</p>
+                    <p class="text-xs text-slate-500 -mt-3 mb-3">These settings control both the live preview and the exported animation.</p>
 
 
                     <div>
-                        <label for="frameTime" class="block text-sm font-medium text-slate-700">Time Between Export Frames (ms)</label>
+                        <label for="exportDegreesPerFrame" class="block text-sm font-medium text-slate-700">Degrees Per Frame (0-180)</label>
+                        <input type="number" id="exportDegreesPerFrame" value="10" min="0" max="180" step="0.1" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                        <p class="text-xs text-slate-500 mt-1">Rotation amount for each animation frame (live and export). 0 for no live rotation.</p>
+                    </div>
+
+                    <div>
+                        <label for="exportTotalFrames" class="block text-sm font-medium text-slate-700">Total Number of Export Frames</label>
+                        <input type="number" id="exportTotalFrames" value="36" min="1" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                         <p class="text-xs text-slate-500 mt-1">Total frames in the exported animation. (e.g., 10° per frame, 9 frames = 90° total rotation for export).</p>
+                    </div>
+
+                    <div>
+                        <label for="frameTime" class="block text-sm font-medium text-slate-700">Time Between Frames (ms)</label>
                         <input type="number" id="frameTime" value="83.3" min="10" step="0.1" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
-                        <p class="text-xs text-slate-500 mt-1">Milliseconds for exported animation (e.g., 83.3ms ≈ 12 FPS).</p>
+                        <p class="text-xs text-slate-500 mt-1">Delay for live preview and exported animation (e.g., 83.3ms ≈ 12 FPS). Min practical browser limit is ~17ms.</p>
                     </div>
 
                     <div>
                         <label for="webpCompression" class="block text-sm font-medium text-slate-700">WebP Quality (1-100)</label>
                         <input type="number" id="webpCompression" value="75" min="1" max="100" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
-                        <p class="text-xs text-slate-500 mt-1">1=Lowest, 100=Highest quality. Affects file size.</p>
+                        <p class="text-xs text-slate-500 mt-1">1=Lowest, 100=Highest quality. Affects file size of export.</p>
                     </div>
 
                     <div>
-                        <label for="finalVerticalSize" class="block text-sm font-medium text-slate-700">Final Vertical Size (px for export & preview)</label>
+                        <label for="finalVerticalSize" class="block text-sm font-medium text-slate-700">Final Vertical Size (px)</label>
                         <input type="number" id="finalVerticalSize" placeholder="Original height" min="10" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
                         <p class="text-xs text-slate-500 mt-1">Height for preview and exported WebP. Width auto-scales.</p>
                     </div>
@@ -145,14 +141,13 @@
             const ctx = canvas.getContext('2d');
             const canvasMessage = document.getElementById('canvasMessage');
 
-            // Input elements
             const imageUpload = document.getElementById('imageUpload');
-            const rotationAmountInput = document.getElementById('rotationAmount'); // Renamed to reflect live speed
-            const rotationFramesInput = document.getElementById('rotationFrames');
-            const exportRotationStepInput = document.getElementById('exportRotationStep'); // New input for export step
+            const exportDegreesPerFrameInput = document.getElementById('exportDegreesPerFrame');
+            const exportTotalFramesInput = document.getElementById('exportTotalFrames');
             const frameTimeInput = document.getElementById('frameTime');
             const webpCompressionInput = document.getElementById('webpCompression');
-            const finalVerticalSizeInput = document.getElementById('finalVerticalSize');
+            const finalVerticalSizeInput = document.getElementById('finalVerticalSize'); 
+
             const exportButton = document.getElementById('exportButton');
             const loadingIndicator = document.getElementById('loadingIndicator');
             const exportMessage = document.getElementById('exportMessage');
@@ -161,10 +156,10 @@
             let originalImageWidth = 0;
             let originalImageHeight = 0;
             
-            let livePreviewRotationAngle = 0; // Angle for the live preview animation
-            let animationFrameId = null;       // ID for requestAnimationFrame
+            let livePreviewRotationAngle = 0; 
+            let animationFrameId = null;
+            let lastFrameTimestamp = 0;
 
-            // --- Helper: Debounce function ---
             function debounce(func, delay) {
                 let timeout;
                 return function(...args) {
@@ -173,10 +168,9 @@
                 };
             }
 
-            // --- Image Upload Logic ---
             imageUpload.addEventListener('change', (event) => {
                 const file = event.target.files[0];
-                if (file && (file.type === "image/png" || file.type === "image/gif")) {
+                if (file && (file.type === "image/png" || file.type === "image/gif" || file.type === "image/webp" || file.type === "image/jpeg")) {
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         currentImage = new Image();
@@ -187,44 +181,39 @@
                                 finalVerticalSizeInput.value = originalImageHeight;
                             }
                             exportButton.disabled = false;
-                            canvasMessage.textContent = `Image loaded: ${originalImageWidth}x${originalImageHeight}px. Adjust settings below.`;
-                            
-                            livePreviewRotationAngle = 0; // Reset angle for new image
-                            startOrUpdateAnimationLoop(); // Start animation
+                            canvasMessage.textContent = `Image loaded: ${originalImageWidth}x${originalImageHeight}px. Adjust settings.`;
+                            livePreviewRotationAngle = 0; 
+                            lastFrameTimestamp = performance.now(); 
+                            startOrUpdateAnimationLoop(); 
                         };
                         currentImage.onerror = () => {
-                            canvasMessage.textContent = "Error loading image. Please try another file.";
-                            exportButton.disabled = true;
-                            currentImage = null;
-                            if (animationFrameId) {
-                                cancelAnimationFrame(animationFrameId);
-                                animationFrameId = null;
-                            }
-                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            handleImageError("Error loading image. Please try another file.");
                         }
                         currentImage.src = e.target.result;
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    currentImage = null;
-                    exportButton.disabled = true;
-                    if (animationFrameId) {
-                        cancelAnimationFrame(animationFrameId);
-                        animationFrameId = null;
-                    }
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    canvasMessage.textContent = "Please upload a valid PNG or GIF file.";
+                    handleImageError("Please upload a valid PNG, GIF, WebP, or JPG file.");
                 }
             });
 
-            // --- Live Preview Drawing Function ---
-            // This function now solely relies on livePreviewRotationAngle for rotation
+            function handleImageError(message) {
+                canvasMessage.textContent = message;
+                exportButton.disabled = true;
+                currentImage = null;
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+            
             function drawLivePreview() {
                 if (!currentImage) {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     return;
                 }
-
+                // Clear the entire 1600x1600 canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 let previewHeight = parseFloat(finalVerticalSizeInput.value) || originalImageHeight;
@@ -233,73 +222,93 @@
                 const aspectRatio = originalImageWidth > 0 && originalImageHeight > 0 ? originalImageWidth / originalImageHeight : 1;
                 let previewWidth = previewHeight * aspectRatio;
 
-                const maxDim = 1580; 
+                // Scale the preview image if it's larger than the canvas drawing area (1600x1600)
+                // This is for the internal drawing logic, not the displayed canvas size.
+                const maxDim = 1580; // Max dimension to draw within 1600px canvas with some padding
                 if (previewWidth > maxDim || previewHeight > maxDim) {
-                    if (aspectRatio >= 1) { // Wider or square
+                    if (aspectRatio >= 1) { 
                         previewWidth = maxDim;
                         previewHeight = maxDim / aspectRatio;
-                    } else { // Taller
+                    } else { 
                         previewHeight = maxDim;
                         previewWidth = maxDim * aspectRatio;
                     }
                 }
                 
-                ctx.save();
+                // --- Draw Bounding Box ---
+                // Calculate top-left corner for the centered bounding box
+                const boxX = (canvas.width - previewWidth) / 2;
+                const boxY = (canvas.height - previewHeight) / 2;
+
+                ctx.save(); // Save context state before drawing bounding box
+                ctx.strokeStyle = '#CCCCCC'; // Light grey color
+                ctx.lineWidth = 2;          // 2-pixel line
+                // Draw the rectangle for the bounding box (square corners are default)
+                ctx.strokeRect(boxX, boxY, previewWidth, previewHeight);
+                ctx.restore(); // Restore context state (lineWidth, strokeStyle might be affected otherwise)
+
+
+                // --- Draw Rotated Image ---
+                ctx.save(); // Save context for image rotation
+                // Translate to the center of the 1600x1600 canvas for rotation
                 ctx.translate(canvas.width / 2, canvas.height / 2);
-                ctx.rotate(livePreviewRotationAngle * Math.PI / 180); // Use the animated angle
+                ctx.rotate(livePreviewRotationAngle * Math.PI / 180); 
+                // Draw the image centered around the new origin
+                // The image itself is drawn with its calculated previewWidth and previewHeight
                 ctx.drawImage(currentImage, -previewWidth / 2, -previewHeight / 2, previewWidth, previewHeight);
-                ctx.restore();
+                ctx.restore(); // Restore context after drawing image
             }
             
-            const debouncedDrawLivePreviewForScale = debounce(drawLivePreview, 100); // For scale changes
+            const debouncedDrawLivePreviewForScale = debounce(drawLivePreview, 100);
 
-            // --- Animation Loop for Live Preview ---
-            function animationLoop() {
-                if (!currentImage) { // Stop if no image
+            function animationLoop(timestamp) {
+                if (!currentImage) { 
                     if (animationFrameId) cancelAnimationFrame(animationFrameId);
                     animationFrameId = null;
                     return;
                 }
 
-                const rotationStep = parseFloat(rotationAmountInput.value) || 0; // Degrees per frame for live preview
-                livePreviewRotationAngle = (livePreviewRotationAngle + rotationStep) % 360;
-                
-                drawLivePreview(); // Redraw with new angle and current scale
+                const desiredFrameTime = parseFloat(frameTimeInput.value) || 83.3; 
+                const degreesPerStep = parseFloat(exportDegreesPerFrameInput.value) || 0;
 
+                const elapsed = timestamp - lastFrameTimestamp;
+
+                if (elapsed >= desiredFrameTime) {
+                    lastFrameTimestamp = timestamp - (elapsed % desiredFrameTime); 
+                    
+                    if (degreesPerStep > 0) { 
+                       livePreviewRotationAngle = (livePreviewRotationAngle + degreesPerStep) % 360;
+                    }
+                    drawLivePreview(); 
+                }
+                
                 animationFrameId = requestAnimationFrame(animationLoop);
             }
 
             function startOrUpdateAnimationLoop() {
                 if (animationFrameId) {
-                    cancelAnimationFrame(animationFrameId); // Stop existing loop before starting new one or changing speed
+                    cancelAnimationFrame(animationFrameId); 
                 }
-                if (currentImage) { // Only start if there's an image
-                    animationLoop();
+                if (currentImage) { 
+                    lastFrameTimestamp = performance.now(); 
+                    animationFrameId = requestAnimationFrame(animationLoop);
                 }
             }
 
-            // --- Event Listeners for Controls ---
-            // Listener for rotation speed of live preview
-            rotationAmountInput.addEventListener('input', () => {
-                if (currentImage) {
-                    // The loop will pick up the new speed. If it wasn't running, start it.
-                    startOrUpdateAnimationLoop();
-                }
+            [exportDegreesPerFrameInput, frameTimeInput].forEach(input => {
+                input.addEventListener('input', () => {
+                    if (currentImage) {
+                        startOrUpdateAnimationLoop(); 
+                    }
+                });
             });
 
-            // Listener for scale changes
             finalVerticalSizeInput.addEventListener('input', () => {
                 if (currentImage) {
-                    // For immediate feedback on scaling, call drawLivePreview (debounced).
-                    // The animation loop will continue using this new scale on its next frame.
-                    debouncedDrawLivePreviewForScale();
+                    debouncedDrawLivePreviewForScale(); 
                 }
             });
             
-            // Other inputs (rotationFramesInput, exportRotationStepInput, frameTimeInput, webpCompressionInput)
-            // do not need to trigger live preview redraws as they only affect export.
-
-            // --- Export Button Logic ---
             exportButton.addEventListener('click', async () => {
                 if (!currentImage) {
                     exportMessage.textContent = "Please upload an image first.";
@@ -307,7 +316,7 @@
                     return;
                 }
 
-                exportMessage.textContent = "Preparing frames...";
+                exportMessage.textContent = "Preparing frames for export...";
                 exportMessage.className = "text-sm text-center text-blue-600 mt-2";
                 loadingIndicator.classList.remove('hidden');
                 exportButton.disabled = true;
@@ -315,15 +324,23 @@
                 await new Promise(resolve => setTimeout(resolve, 100));
 
                 try {
-                    const numFrames = parseInt(rotationFramesInput.value);
-                    // Use the new exportRotationStepInput for export frame rotation
-                    const rotAmountPerExportFrame = parseFloat(exportRotationStepInput.value); 
-                    const frameTimeMs = parseFloat(frameTimeInput.value);
-                    const webpQuality = parseInt(webpCompressionInput.value); 
+                    const degreesPerExportFrame = parseFloat(exportDegreesPerFrameInput.value) || 10; 
+                    const totalExportFrames = parseInt(exportTotalFramesInput.value) || 36; 
+                    
+                    if (totalExportFrames < 1) {
+                        exportMessage.textContent = "Number of export frames must be at least 1.";
+                        loadingIndicator.classList.add('hidden');
+                        exportButton.disabled = false;
+                        return;
+                    }
+                    
+                    const exportFrameTimeMs = parseFloat(frameTimeInput.value) || 83.3; 
+                    const webpQuality = parseInt(webpCompressionInput.value) || 75; 
                     
                     let exportHeight = parseFloat(finalVerticalSizeInput.value) || originalImageHeight;
                     if (exportHeight <= 0) exportHeight = originalImageHeight;
-                    const aspectRatio = originalImageWidth / originalImageHeight;
+                    
+                    const aspectRatio = originalImageWidth > 0 && originalImageHeight > 0 ? originalImageWidth / originalImageHeight : 1;
                     const exportWidth = Math.round(exportHeight * aspectRatio);
                     exportHeight = Math.round(exportHeight);
 
@@ -334,43 +351,46 @@
 
                     const generatedFrames = []; 
 
-                    for (let i = 0; i < numFrames; i++) {
-                        const currentRotationDegrees = i * rotAmountPerExportFrame; // Use export step
+                    for (let i = 0; i < totalExportFrames; i++) {
+                        const currentRotationDegrees = i * degreesPerExportFrame;
                         
                         offCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height); 
-                        
                         offCtx.save();
                         offCtx.translate(offscreenCanvas.width / 2, offscreenCanvas.height / 2);
                         offCtx.rotate(currentRotationDegrees * Math.PI / 180);
-                        offCtx.drawImage(currentImage, -offscreenCanvas.width / 2, -offscreenCanvas.height / 2, offscreenCanvas.width, offscreenLHeight);
+                        offCtx.drawImage(currentImage, -offscreenCanvas.width / 2, -offscreenCanvas.height / 2, offscreenCanvas.width, offscreenCanvas.height);
                         offCtx.restore();
                         
                         generatedFrames.push({
                             imageData: offCtx.getImageData(0, 0, offscreenCanvas.width, offscreenCanvas.height),
-                            delay: frameTimeMs
+                            delay: exportFrameTimeMs 
                         });
-                        exportMessage.textContent = `Generated frame ${i + 1} of ${numFrames}...`;
-                        await new Promise(resolve => setTimeout(resolve, 10)); 
+                        exportMessage.textContent = `Generated export frame ${i + 1} of ${totalExportFrames}...`;
+                        if (i % 10 === 0 && i > 0) { 
+                            await new Promise(resolve => setTimeout(resolve, 0)); 
+                        }
                     }
 
-                    exportMessage.textContent = `All ${numFrames} frames generated. Ready for WebP encoding.`;
-                    console.log("Generated frames for export:", generatedFrames);
+                    exportMessage.textContent = `All ${totalExportFrames} export frames generated. Total rotation: ${degreesPerExportFrame * totalExportFrames}°.`;
+                    console.log("Generated frames for export:", generatedFrames.length);
                     console.log("WebP Quality (1-100):", webpQuality);
-                    console.log("Frame time (ms):", frameTimeMs);
-                    console.log("Rotation per export frame (degrees):", rotAmountPerExportFrame);
-
-
-                    // ** PLACEHOLDER FOR ACTUAL WEBP ENCODING **
-                    // (Same placeholder as before)
-                    const lastFrameDataUrl = offscreenCanvas.toDataURL('image/webp', webpQuality / 100);
+                    console.log("Frame time for export (ms):", exportFrameTimeMs);
+                    console.log("Degrees Per Export Frame:", degreesPerExportFrame);
+                    console.log("Total Export Frames:", totalExportFrames);
+                    console.log("--- IMPORTANT: The following is a DEMO export of the LAST frame only. ---");
+                    console.log("--- To create an ANIMATED WebP, integrate a JavaScript WebP encoding library here, ---");
+                    console.log("--- feeding it the 'generatedFrames' array. ---");
+                    
+                    const lastFrameDataUrl = offscreenCanvas.toDataURL('image/webp', webpQuality / 100); 
                     const a = document.createElement('a');
                     a.href = lastFrameDataUrl;
-                    a.download = `spinner_LAST_FRAME_${Date.now()}.webp`;
+                    a.download = `spinner_DEMO_LAST_FRAME_${Date.now()}.webp`;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
+                    URL.revokeObjectURL(lastFrameDataUrl); 
 
-                    exportMessage.textContent = `All ${numFrames} frames generated. Last frame exported as static WebP for demo. Integrate a JS WebP library for animation.`;
+                    exportMessage.innerHTML = `All ${totalExportFrames} frames generated. Total rotation: ${degreesPerExportFrame * totalExportFrames}°.<br><b>DEMO: Last frame exported as static WebP.</b><br><small>Integrate a JS WebP library for full animation.</small>`;
                     exportMessage.className = "text-sm text-center text-green-700 mt-2 font-semibold";
 
                 } catch (error) {
@@ -382,7 +402,6 @@
                     exportButton.disabled = false;
                 }
             });
-            // Initial message
             canvasMessage.textContent = "Upload an image to begin.";
         });
     </script>
