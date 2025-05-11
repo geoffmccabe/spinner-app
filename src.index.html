@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Object Spinner & WebP Exporter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="main.css"> <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        #spinnerCanvas {
+            background-image:
+                linear-gradient(45deg, #ccc 25%, transparent 25%),
+                linear-gradient(-45deg, #ccc 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #ccc 75%),
+                linear-gradient(-45deg, transparent 75%, #ccc 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            width: 100%;
+            height: 100%;
+            max-width: 600px; 
+            max-height: 600px; 
+            object-fit: contain; 
+        }
+        .canvas-wrapper {
+            width: 600px; 
+            height: 600px;
+            border: 1px solid #e2e8f0; 
+            overflow: hidden; 
+            margin: auto; 
+        }
+        .controls-container {
+            max-width: 600px;
+            margin: auto; 
+        }
+        input[type="file"]::file-selector-button {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        input[type="file"]::file-selector-button:hover {
+            background-color: #2563eb;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .object-button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .object-button {
+            transition: background-color 0.2s, border-color 0.2s;
+            width: 100%; 
+        }
+        .object-button.active {
+            background-color: #3b82f6; 
+            color: white;
+            border-color: #2563eb; 
+        }
+        .object-button:not(.active):hover {
+            background-color: #eff6ff; 
+        }
+        .object-file-name {
+            font-size: 0.65rem; 
+            color: #64748b; 
+            margin-top: 2px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 80px; 
+            display: block; 
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-100 text-slate-800 p-4 md:p-8">
+
+    <div class="container mx-auto max-w-5xl">
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-slate-700">Multi-Object Spinner & WebP Exporter</h1>
+            <p class="text-slate-500 mt-2">Manage up to 6 layered objects. Adjust settings for preview and composite export.</p>
+        </header>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <div class="lg:w-2/3 flex flex-col items-center">
+                <div class="canvas-wrapper shadow-lg rounded-lg bg-white">
+                    <canvas id="spinnerCanvas" width="1600" height="1600"></canvas>
+                </div>
+                <p id="canvasMessage" class="text-sm text-slate-500 mt-2">Select an object and upload an image to begin.</p>
+            </div>
+
+            <div class="lg:w-1/3 bg-white p-6 rounded-lg shadow-lg controls-container">
+                <div class="mb-6">
+                    <p class="text-md font-semibold text-slate-700 mb-2">Select Object to Configure (Object 1 is Top Layer):</p>
+                    <div id="objectSelectorContainer" class="grid grid-cols-3 gap-x-2 gap-y-3">
+                        </div>
+                </div>
+
+                <div class="space-y-5">
+                    <div>
+                        <label for="imageUpload" class="block text-sm font-medium text-slate-700 mb-1">Upload Image for Selected Object</label>
+                        <input type="file" id="imageUpload" accept="image/png, image/gif, image/webp, image/jpeg" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-slate-300 rounded-md cursor-pointer">
+                        <button id="removeImageButton" class="mt-2 text-xs text-red-500 hover:text-red-700 disabled:text-slate-400" disabled>Remove Image (DELETE)</button>
+                    </div>
+                    
+                    <hr class="my-4 border-slate-200">
+                    <p class="text-md font-semibold text-slate-700">Settings for Selected Object:</p>
+                    
+                    <div>
+                        <label for="degreesPerFrame" class="block text-sm font-medium text-slate-700">Degrees Per Frame (-180 to 180)</label>
+                        <input type="number" id="degreesPerFrame" value="10" min="-180" max="180" step="0.1" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                        <p class="text-xs text-slate-500 mt-1">Rotation for this object's animation frame. Negative for backward.</p>
+                    </div>
+
+                    <div>
+                        <label for="finalVerticalSize" class="block text-sm font-medium text-slate-700">Object's Vertical Size (px)</label>
+                        <input type="number" id="finalVerticalSize" placeholder="Original height" min="10" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                        <p class="text-xs text-slate-500 mt-1">Height for this object in preview and export. Width auto-scales.</p>
+                    </div>
+                     <div>
+                        <label for="opacity" class="block text-sm font-medium text-slate-700">Object Opacity (0-100%)</label>
+                        <input type="number" id="opacity" value="100" min="0" max="100" step="1" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                        <p class="text-xs text-slate-500 mt-1">Transparency for this object.</p>
+                    </div>
+
+
+                    <hr class="my-4 border-slate-200">
+                    <p class="text-md font-semibold text-slate-700">Global Composite Export Settings:</p>
+
+                    <div>
+                        <label for="totalExportFrames" class="block text-sm font-medium text-slate-700">Total Export Frames</label>
+                        <input type="number" id="totalExportFrames" value="36" min="1" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                         <p class="text-xs text-slate-500 mt-1">Total frames for the <span class="font-bold">entire composite</span> exported animation.</p>
+                    </div>
+
+                    <div>
+                        <label for="frameTime" class="block text-sm font-medium text-slate-700">Time Between Frames (ms)</label>
+                        <input type="number" id="frameTime" value="83.3" min="10" step="0.1" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                        <p class="text-xs text-slate-500 mt-1">Delay for <span class="font-bold">composite animation</span> (live preview and export). Min practical browser limit is ~17ms.</p>
+                    </div>
+
+                    <div>
+                        <label for="webpCompression" class="block text-sm font-medium text-slate-700">WebP Quality (1-100)</label>
+                        <input type="number" id="webpCompression" value="75" min="1" max="100" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                        <p class="text-xs text-slate-500 mt-1">1=Lowest, 100=Highest quality. Affects file size of export.</p>
+                    </div>
+
+
+                    <button id="exportButton" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md shadow-md transition duration-150 ease-in-out">
+                        Prepare Composite Export
+                    </button>
+                    <div id="loadingIndicator" class="hidden loader"></div>
+                    <p id="exportMessage" class="text-sm text-center text-slate-600 mt-2"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
