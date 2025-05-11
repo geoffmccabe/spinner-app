@@ -1,0 +1,25 @@
+{
+    "name": "spinner-app-node",
+    "version": "1.0.0",
+    "description": "Multi-object image spinner and WebP exporter",
+    "scripts": {
+      "start": "node server.js",
+      "dev": "parcel src/index.html --open",
+      "build": "parcel build src/index.html --dist-dir dist"
+    },
+    "keywords": [
+      "webp",
+      "animation",
+      "image",
+      "spinner"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+      "express": "^4.19.2",
+      "webp-wasm": "^1.0.6"
+    },
+    "devDependencies": {
+      "parcel": "^2.12.0"
+    }
+  }
